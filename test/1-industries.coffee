@@ -4,6 +4,8 @@ describe 'Sector', ->
   it 'constituent', ->
     console.log await Sector.constituent 'energy'
 
-  it 'percentMA20', ->
-    energy = new Sector await Sector.constituent 'energy'
-    console.log await energy.percentMA20()
+  it 'breadth', ->
+    for name in Sector.list
+      sector = new Sector await Sector.constituent name
+      console.log name
+      console.log await sector.breadth()

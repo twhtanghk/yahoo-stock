@@ -31,14 +31,9 @@ class Sector
   constructor: (@symbols) ->
     return
 
-  percentMA20: ->
-    {percentMA20, ohlc} = require 'analysis'
-    for i in @symbols
-      try
-        await ohlc.stock i
-      catch e
-        console.error "#{i}: #{e}"
-    await percentMA20 @symbols
+  breadth: ->
+    {breadth} = require 'analysis'
+    await breadth @symbols
 
 module.exports =
   Sector: Sector
