@@ -1,0 +1,28 @@
+{
+  "name": "yahoo-stock",
+  "version": "0.0.1",
+  "description": "Web scraper for yahoo stock data",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "mocha test/*.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twhtanghk/yahoo-stock.git"
+  },
+  "author": "Tommy Tang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/twhtanghk/yahoo-stock/issues"
+  },
+  "homepage": "https://github.com/twhtanghk/yahoo-stock#readme",
+  "dependencies": {
+    "analysis": "github:twhtanghk/analysis",
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.5",
+    "coffeescript": "^2.5.1"
+  },
+  "devDependencies": {
+    "mocha": "^8.2.1"
+  }
+}
