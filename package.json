@@ -20,7 +20,9 @@
     "analysis": "github:twhtanghk/analysis",
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.5",
-    "coffeescript": "^2.5.1"
+    "coffeescript": "^2.5.1",
+    "moment": "^2.29.1",
+    "yahoo-stock-api": "https://github.com/twhtanghk/yahoo-stock-api"
   },
   "devDependencies": {
     "mocha": "^8.2.1"

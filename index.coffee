@@ -1,5 +1,28 @@
 axios = require 'axios'
 cheerio = require 'cheerio'
+{symbol} = require 'analysis'
+{getSymbol, getHistoricalPrices} = require 'yahoo-stock-api'
+moment = require 'moment'
+
+class Stock
+  constructor: (@symbol) ->
+    @symbol = symbol.yahoo @symbol
+
+  quote: ->
+    {error, currency, response} = await getSymbol @symbol
+    if error
+      throw error
+    response
+
+  historicalPrice: (days=365) ->
+    start = moment()
+      .subtract days, 'days'
+      .toDate()
+    {error, currency, response} = await getHistoricalPrices start, new Date(), @symbol, '1d'
+    if error
+      throw error
+    response.filter (row) ->
+      not row.type
 
 class Sector
   @url : process.env.SECTORURL || 'https://hk.finance.yahoo.com/industries/'
@@ -36,4 +59,5 @@ class Sector
     await breadth @symbols
 
 module.exports =
+  Stock: Stock
   Sector: Sector
