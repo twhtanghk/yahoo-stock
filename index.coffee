@@ -1,6 +1,6 @@
 axios = require 'axios'
 cheerio = require 'cheerio'
-{symbol} = require 'analysis'
+{symbol, ema, indicators} = require 'analysis'
 {getSymbol, getHistoricalPrices} = require 'yahoo-stock-api'
 moment = require 'moment'
 
@@ -23,6 +23,12 @@ class Stock
       throw error
     response.filter (row) ->
       not row.type
+
+  ema: (days=20) ->
+    ema (await @historicalPrice()), 20
+
+  indicators: ->
+    indicators await @historicalPrice 180
 
 class Sector
   @url : process.env.SECTORURL || 'https://hk.finance.yahoo.com/industries/'
