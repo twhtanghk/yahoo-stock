@@ -26,12 +26,11 @@ class Stock
     ask = Stock.BIDASK.exec response.ask
     lowHigh = Stock.DAYRANGE.exec response.dayRange
     dividend = Stock.DIVIDEND.exec response.forwardDividendYield
-    diff = bid[1] - response.previousClose
+    change = Stock.DIVIDEND.exec response.change
     Object.assign response,
       bid: bid[1..2]
       ask: bid[1..2]
       lowHigh: lowHigh[1..2]
-      curr: bid[1]
       pe: response.peRatio
       dividend: [
         if dividend[1] == 'N/A' then null else parseFloat dividend[1]
@@ -40,8 +39,8 @@ class Stock
         response.exDividendDate
       ]
       change: [
-        diff
-        diff / response.previousClose * 100
+        if change[1] == 'N/A' then null else parseFloat change[1]
+        if change[2] == 'N/A' then null else parseFloat change[2]
       ]
 
   historicalPrice: (days=365) ->
