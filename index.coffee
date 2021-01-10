@@ -60,9 +60,9 @@ class Stock
     indicators await @historicalPrice 180
 
 class Sector
-  @url : process.env.SECTORURL || 'https://hk.finance.yahoo.com/industries/'
 
   @list: [
+    '^hsi'
     'energy'
     'financial'
     'healthcare'
@@ -77,14 +77,21 @@ class Sector
     'retailing_hospitality'
   ]
 
-  @instance: axios.create
-    baseURL: Sector.url
-    timeout: 5000
-
   @constituent: (sector) ->
-    res = await Sector.instance.get sector
-    $ = cheerio.load res.data
-    cheerio.load(i.childNodes).text() for i in $('.yfinlist-table tbody tr td:nth-child(1) a')
+    if sector == '^hsi'
+      {get} = axios.create
+        baseURL: 'https://hk.finance.yahoo.com/quote/^hsi/components'
+        timeout: 5000
+      res = await get()
+      $ = cheerio.load res.data
+      cheerio.load(i.childNodes).text() for i in $('table tbody tr td:nth-child(1) a')
+    else
+      {get} = axios.create
+        baseURL : 'https://hk.finance.yahoo.com/industries/'
+        timeout: 5000
+      res = await get sector
+      $ = cheerio.load res.data
+      cheerio.load(i.childNodes).text() for i in $('.yfinlist-table tbody tr td:nth-child(1) a')
 
   constructor: (@symbols) ->
     return
