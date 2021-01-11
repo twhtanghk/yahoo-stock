@@ -61,36 +61,38 @@ class Stock
 
 class Sector
 
-  @list: [
-    '^hsi'
-    'energy'
-    'financial'
-    'healthcare'
-    'business_services'
-    'telecom_utilities'
-    'hardware_electronics'
-    'software_services'
-    'manufacturing_materials'
-    'consumer_products_media'
-    'industrials'
-    'diversified_business'
-    'retailing_hospitality'
-  ]
+  @url:
+    industry: (sector) ->
+      "https://hk.finance.yahoo.com/industries/#{sector}"
+
+  @list: 
+    Object.assign 
+      '^hsi': 'https://hk.finance.yahoo.com/quote/^hsi/components',
+      [
+        'energy'
+        'financial'
+        'healthcare'
+        'business_services'
+        'telecom_utilities'
+        'hardware_electronics'
+        'software_services'
+        'manufacturing_materials'
+        'consumer_products_media'
+        'industrials'
+        'diversified_business'
+        'retailing_hospitality'
+      ].reduce ((res, sector) ->
+        Object.assign res, "#{sector}": Sector.url.industry sector), {}
 
   @constituent: (sector) ->
+    {get} = axios.create
+      baseURL: Sector.list[sector]
+      timeout: 5000
+    res = await get()
+    $ = cheerio.load res.data
     if sector == '^hsi'
-      {get} = axios.create
-        baseURL: 'https://hk.finance.yahoo.com/quote/^hsi/components'
-        timeout: 5000
-      res = await get()
-      $ = cheerio.load res.data
       cheerio.load(i.childNodes).text() for i in $('table tbody tr td:nth-child(1) a')
     else
-      {get} = axios.create
-        baseURL : 'https://hk.finance.yahoo.com/industries/'
-        timeout: 5000
-      res = await get sector
-      $ = cheerio.load res.data
       cheerio.load(i.childNodes).text() for i in $('.yfinlist-table tbody tr td:nth-child(1) a')
 
   constructor: (@symbols) ->

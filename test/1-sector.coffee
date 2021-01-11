@@ -2,12 +2,11 @@
 
 describe 'Sector', ->
   it 'constituent', ->
-    for i in Sector.list
-      console.log i
-      console.log await Sector.constituent i
+    for name, url of Sector.list
+      console.log name
+      console.log await Sector.constituent name
 
   it 'breadth', ->
-    for name in Sector.list
+    for name, url of Sector.list
       sector = new Sector await Sector.constituent name
-      out = require('fs').createWriteStream "/tmp/#{name}.json"
-      out.write JSON.stringify await sector.breadth()
+      console.log JSON.stringify await sector.breadth()
