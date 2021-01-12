@@ -7,6 +7,7 @@ moment = require 'moment'
 class Stock
   constructor: (@symbol) ->
     @symbol = symbol.yahoo @symbol
+    @cache = indicators: null
 
   @FLOAT: '[+-]?\\d+\\.\\d+'
   
@@ -57,7 +58,9 @@ class Stock
     ema (await @historicalPrice()), 20
 
   indicators: ->
-    indicators await @historicalPrice 180
+    if not @cache.indicators?
+      @cache.indicators = indicators await @historicalPrice 180
+    @cache.indicators
 
 class Sector
 
