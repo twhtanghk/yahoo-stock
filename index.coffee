@@ -96,7 +96,7 @@ class Sector
     if sector == '^hsi'
       cheerio.load(i.childNodes).text() for i in $('table tbody tr td:nth-child(1) a')
     else
-      cheerio.load(i.childNodes).text() for i in $('.yfinlist-table tbody tr td:nth-child(1) a')
+      cheerio.load(i.childNodes).text() for i in $('#list-res-table tbody tr td:nth-child(1) a')
 
   constructor: (@symbols) ->
     return
