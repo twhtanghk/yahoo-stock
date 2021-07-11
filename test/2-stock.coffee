@@ -4,11 +4,10 @@ describe 'stock', ->
   it 'quote', ->
     for code in ['43']
       stock = new Stock code
-      debugger
       console.log 
         quote: await stock.quote()
         indicators: await stock.indicators()
-###
+
   it 'historicalPrice', ->
     stock = new Stock '0005'
     console.log await stock.historicalPrice()
@@ -20,4 +19,3 @@ describe 'stock', ->
   it 'indicators', ->
     stock = new Stock '0005'
     console.log await stock.indicators()
-###
