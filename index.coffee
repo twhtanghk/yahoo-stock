@@ -59,7 +59,7 @@ class Stock
 
   indicators: ->
     if not @cache.indicators?
-      @cache.indicators = indicators await @historicalPrice 180
+      @cache.indicators = indicators await @historicalPrice 200
     @cache.indicators
 
 class Sector
