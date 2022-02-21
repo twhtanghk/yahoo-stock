@@ -25,6 +25,10 @@
     "yahoo-stock-api": "https://github.com/twhtanghk/yahoo-stock-api"
   },
   "devDependencies": {
-    "mocha": "^8.2.1"
+    "chai": "^4.3.6",
+    "data-forge": "^1.9.2",
+    "data-forge-indicators": "^0.2.7",
+    "mocha": "^9.2.1",
+    "numjs": "^0.16.1"
   }
 }
