@@ -5,8 +5,16 @@ require 'data-forge-indicators'
 describe 'data forge', ->
   it 'historicalPrice', ->
     stock = new Stock '11'
-    data = (new DF.DataFrame await stock.historicalPrice())
+    data = (await stock.historicalPrice())
+      .map (r) ->
+        r.date = new Date r.date * 1000
+        r
+      .filter ({close}) ->
+        close?
+    data = (new DF.DataFrame data)
       .setIndex 'date'
+      .orderBy (r) ->
+        r.date
     close = data
       .deflate (r) ->
         r.close
