@@ -1,10 +1,13 @@
 {Stock} = require '../index'
 DF = require 'data-forge'
 require 'data-forge-indicators'
+{backtest, analyze} = require 'grademark'
 
 describe 'data forge', ->
+  data = null
+
   it 'historicalPrice', ->
-    stock = new Stock '11'
+    stock = new Stock '7200'
     data = (await stock.historicalPrice())
       .map (r) ->
         r.date = new Date r.date * 1000
@@ -39,3 +42,19 @@ describe 'data forge', ->
       .withSeries 's/m', indicators['s/m']
       .withSeries 'm/l', indicators['m/l']
     console.log data.toJSON()
+
+  it 'grademark', ->
+    data = data.renameSeries date: 'time'
+    strategy =
+      entryRule: (enterPosition, args) ->
+        if args.bar.close > args.bar.ema20 and args.bar.ema20 > args.bar.ema60
+          enterPosition direction: 'long'
+      exitRule: (exitPosition, args) ->
+        if args.bar.close < args.bar.ema20 and args.bar.ema20 < args.bar.ema60
+          exitPosition()
+      stopLosss: (args) ->
+        args.entryPrice * 10 /100
+    trades = backtest strategy, data
+    analysis = analyze 100000, trades
+    console.log trades
+    console.log analysis
