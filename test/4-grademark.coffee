@@ -8,7 +8,7 @@ describe 'data forge', ->
 
   it 'historicalPrice', ->
     stock = new Stock '7200'
-    data = (await stock.historicalPrice())
+    data = (await stock.historicalPrice 365)
       .map (r) ->
         r.date = new Date r.date * 1000
         r
@@ -27,16 +27,16 @@ describe 'data forge', ->
       close.ema 120
     ]
     data = data
-      .withSeries 'ema20', ema[0]
-      .withSeries 'ema60', ema[1]
-      .withSeries 'ema120', ema[2]
+      .withSeries 'emaS', ema[0]
+      .withSeries 'emaM', ema[1]
+      .withSeries 'emaL', ema[2]
     indicators =
       'c/s': data.deflate (r) ->
-         (r.close - r.ema20) / r.ema20 * 100
+         (r.close - r.emaS) / r.emaS * 100
       's/m': data.deflate (r) ->
-         (r.ema20 - r.ema60) / r.ema60 * 100
+         (r.emaS - r.emaM) / r.emaM * 100
       'm/l': data.deflate (r) ->
-         (r.ema60 - r.ema120) / r.ema120 * 100
+         (r.emaM - r.emaL) / r.emaL * 100
     data = data
       .withSeries 'c/s', indicators['c/s']
       .withSeries 's/m', indicators['s/m']
@@ -47,13 +47,15 @@ describe 'data forge', ->
     data = data.renameSeries date: 'time'
     strategy =
       entryRule: (enterPosition, args) ->
-        if args.bar.close > args.bar.ema20 and args.bar.ema20 > args.bar.ema60
+        {close, emaS, emaM, emaL} = args.bar
+        if close >= emaS and emaS >= emaM
           enterPosition direction: 'long'
       exitRule: (exitPosition, args) ->
-        if args.bar.close < args.bar.ema20 and args.bar.ema20 < args.bar.ema60
+        {close, emaS, emaM, emaL} = args.bar
+        if close <= emaS and emaS <= emaM
           exitPosition()
-      stopLosss: (args) ->
-        args.entryPrice * 10 /100
+      stopLoss: (args) ->
+        args.entryPrice * 5 /100
     trades = backtest strategy, data
     analysis = analyze 100000, trades
     console.log trades
